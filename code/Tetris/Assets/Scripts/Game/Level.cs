@@ -77,10 +77,18 @@ namespace Mini.Game
             m_BrickList[m_NewBrickPos.x, m_NewBrickPos.y] = brickComponent;
         }
 
-        private void OnValidate()
+        [ContextMenu(nameof(CheckScoreNow))]
+        private void CheckScoreNow()
         {
-            Generate();
+            if (CheckFull(out List<int> indexs)){
+                Debug.Log("check full============" + indexs);
+                // biling biling 
+                // remove line
+                // addScore
+                // dowmline
+            }
         }
+        
         [ContextMenu(nameof(Clear))]
         private void Clear()
         {
@@ -93,7 +101,7 @@ namespace Mini.Game
                         var brick = m_BrickList[i, j];
                         if (brick)
                         {
-                            Destroy(brick.gameObject);
+                            DestroyImmediate(brick.gameObject);
                             m_BrickList[i, j] = null;
                         }
                     }
