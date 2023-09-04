@@ -14,9 +14,10 @@ namespace Mini.Shared
         // Update is called once per frame
         void Update()
         {
-            if (string.IsNullOrEmpty(m_PlayerLayerString) || string.IsNullOrEmpty(m_PlatformLayerString)) return;
             bool isInputDown = Input.GetAxis("Vertical") < 0;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer(m_PlayerLayerString), LayerMask.NameToLayer(m_PlatformLayerString), isInputDown);
+            
+            
         }
     }
 

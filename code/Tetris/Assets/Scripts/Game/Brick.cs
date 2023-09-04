@@ -18,12 +18,9 @@ namespace Mini.Game
                 transform.position = new Vector3(value.x, value.y, transform.position.z);
             }
         }
-#if UNITY_EDITOR
         private void OnValidate()
         {
-            transform.position = new Vector3(m_Pos.x, m_Pos.y, transform.position.z);
+            transform.position = new Vector3(Pos.x, Pos.y, transform.position.z);
         }
     }
-#endif
-
 }
