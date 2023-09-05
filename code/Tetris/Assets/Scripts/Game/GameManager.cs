@@ -15,7 +15,7 @@ namespace Mini.Game
         private int m_Score;
         private BrickGroup m_CurrentBrickGroup;
         [SerializeField]
-        private SpawnBrickItem[] m_SpawnBricks;
+        private SpawnBricks m_SpawnBricks1;
 
         private float m_LoopTime = 1.0f;
 
@@ -142,14 +142,14 @@ namespace Mini.Game
 
         private GameObject RandomBrickGroup()
         {
-            int totalWeight = m_SpawnBricks.Sum(e => e.Weight);
+            SpawnBrickItem[] items = m_SpawnBricks1.Bricks;
+            int totalWeight = items.Sum(e => e.Weight);
             int randomWeight = Random.Range(1, totalWeight + 1);
             var random = new System.Random();
             
-            Debug.Log("Random==================" + randomWeight + "   " +  random.Next(1, totalWeight + 1));
-            SpawnBrickItem target = null;
+            SpawnBrickItem? target = null;
             int countWeight = 0;
-            foreach (var element in m_SpawnBricks)
+            foreach (var element in items)
             {
                 countWeight += element.Weight;
                 if (randomWeight <= countWeight)
@@ -158,7 +158,7 @@ namespace Mini.Game
                     break;
                 }
             }
-            return target.BrickPref;
+            return target?.Prefab;
         }
 
     }

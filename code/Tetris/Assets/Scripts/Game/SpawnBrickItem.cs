@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Mini.Game
 {
-    [CreateAssetMenu(fileName =nameof(SpawnBrickItem), menuName ="Runner/"+nameof(SpawnBrickItem))]
-    public class SpawnBrickItem : ScriptableObject
+    [Serializable]
+    public struct SpawnBrickItem
     {
         public int Weight;
-        public GameObject BrickPref;
+        public GameObject Prefab;
     }
 }

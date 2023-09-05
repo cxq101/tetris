@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Level: {fileID: 863440312}
+  m_SpawnBricks1: {fileID: 11400000, guid: 614a54afe51d88a4286073232ac26aeb, type: 2}
   m_SpawnBricks:
   - {fileID: 11400000, guid: 4c5d7940ad9e53a4b866eaedce5366ce, type: 2}
   - {fileID: 11400000, guid: aee481c2a24a6ff4987e1f510a883e0e, type: 2}
