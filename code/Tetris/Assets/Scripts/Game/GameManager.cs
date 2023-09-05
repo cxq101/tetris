@@ -16,9 +16,10 @@ namespace Mini.Game
         private BrickGroup m_CurrentBrickGroup;
         [SerializeField]
         private SpawnBrickItem[] m_SpawnBricks;
-        [SerializeField]
-        private Vector2Int m_SpawnPos;
 
+        private float m_LoopTime = 1.0f;
+
+        public Vector2Int SpawnPos => new Vector2Int(m_Level.Width / 2, m_Level.Height);
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -40,16 +41,23 @@ namespace Mini.Game
         {
             if (m_Level.CheckFull(out int[] fullLines))
             {
-                m_Level.RomoveLinesAndDrop(fullLines);
-                // Add Score
-                m_Score += fullLines.Length;
-                // Hud change
+                m_Level.Bling(fullLines);
+                StartCoroutine(BlingAndRemove(fullLines));
             }
+        }
+
+        private IEnumerator BlingAndRemove(int[] fullLines)
+        {
+            yield return new WaitForSeconds(0.6f);
+            m_Level.RomoveLinesAndDrop(fullLines);
+            // Add Score
+            m_Score += fullLines.Length;
+            Debug.Log($"Score add: {fullLines.Length}  total: {m_Score}");
         }
 
         private void StartGameLoop()
         {
-            InvokeRepeating(nameof(Step), 0.0f, 1);
+            InvokeRepeating(nameof(Step), 0.0f, m_LoopTime);
         }
 
         private void StopGameLoop()
@@ -59,19 +67,55 @@ namespace Mini.Game
 
         private void Step()
         {
-            CheckSpawn();
-            TryMoveDown();
+            if (m_CurrentBrickGroup == null)
+            {
+                Spawn();
+            }
+            else
+            {
+                if (!TryMoveBy(Vector2Int.down))
+                {
+                    if (!TryStopMoveAddToLevel())
+                    {
+                        Debug.Log("====Game Over====");
+                    }
+                }
+            }
+            CheckScoreNow();
         }
 
-        public void OnInputMove(int direction)
+        private bool TryStopMoveAddToLevel()
         {
-            Move(direction);
+            Vector2Int[] posArr = m_CurrentBrickGroup.PosArray();
+            if (m_Level.IsValid(posArr, false))
+            {
+                m_Level.AddBrickGroup(posArr);
+                Destroy(m_CurrentBrickGroup.gameObject);
+                m_CurrentBrickGroup = null;
+                return true;
+            }
+            return false;
         }
 
-        private void Move(int direction)
+        public void OnInputMove(Vector2Int pos)
         {
-            Vector2Int pos = direction == 1 ? Vector2Int.right : Vector2Int.left;   
             TryMoveBy(pos);
+        }
+
+        public void OnInputTransform()
+        {
+            TryTransForm();
+        }
+
+        private bool TryTransForm()
+        {
+            if (m_CurrentBrickGroup == null) return false;
+            if (m_Level.IsValid(m_CurrentBrickGroup.NextTransformPosArray()))
+            {
+                m_CurrentBrickGroup.TransformNext();
+                return true;
+            }
+            return false;
         }
 
         private bool TryMoveBy(Vector2Int pos)
@@ -85,57 +129,35 @@ namespace Mini.Game
             return false;
         }
 
-        private void CheckSpawn()
-        {
-            if (m_CurrentBrickGroup != null) return;
-            Spawn();
-        }        
-        
-        private void TryMoveDown()
-        {
-            if(!TryMoveBy(Vector2Int.down))
-            {
-                Vector2Int[] posArr = m_CurrentBrickGroup.PosArray(); 
-                m_Level.AddBrickGroup(posArr);
-                Destroy(m_CurrentBrickGroup.gameObject);
-                m_CurrentBrickGroup = null;
-            }
-        }
+
         private void Spawn()
         {
             GameObject randomPrefab = RandomBrickGroup();
             GameObject gameObject = Instantiate(randomPrefab);
             BrickGroup brickGroup = gameObject.GetComponent<BrickGroup>();
-            Vector2Int[] posArr = brickGroup.PosArray(m_SpawnPos);
-            if (m_Level.IsValid(posArr))
-            {
-                m_CurrentBrickGroup = brickGroup;
-                m_CurrentBrickGroup.SetPos(m_SpawnPos);
-            }
-            else
-            {
-                Destroy(gameObject);
-                Debug.Log("Game Over========");
-            }
+            Vector2Int[] posArr = brickGroup.PosArray(SpawnPos);
+            m_CurrentBrickGroup = brickGroup;
+            m_CurrentBrickGroup.SetPos(SpawnPos);
         }
 
         private GameObject RandomBrickGroup()
         {
             int totalWeight = m_SpawnBricks.Sum(e => e.Weight);
-            int randomWeight = Random.Range(0, totalWeight);
+            int randomWeight = Random.Range(1, totalWeight + 1);
+            var random = new System.Random();
+            
+            Debug.Log("Random==================" + randomWeight + "   " +  random.Next(1, totalWeight + 1));
             SpawnBrickItem target = null;
             int countWeight = 0;
             foreach (var element in m_SpawnBricks)
             {
-                countWeight+= element.Weight;
-                if (countWeight <= randomWeight)
+                countWeight += element.Weight;
+                if (randomWeight <= countWeight)
                 {
                     target = element;
                     break;
                 }
             }
-            target = m_SpawnBricks.Last();
-            
             return target.BrickPref;
         }
 

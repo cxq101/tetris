@@ -305,8 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b45321ceb90fc447b467616e4a0e3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Width: 6
-  m_Height: 12
+  m_Width: 10
+  m_Height: 20
   m_OutlineTransform: {fileID: 1601093071}
   m_BrickPrefab: {fileID: 7969787197077151043, guid: 292e15dcfee65e845a46fd11263bc6a3, type: 3}
 --- !u!212 &863440314
@@ -394,7 +394,11 @@ MonoBehaviour:
   m_SpawnBricks:
   - {fileID: 11400000, guid: 4c5d7940ad9e53a4b866eaedce5366ce, type: 2}
   - {fileID: 11400000, guid: aee481c2a24a6ff4987e1f510a883e0e, type: 2}
-  m_SpawnPos: {x: 2, y: 10}
+  - {fileID: 11400000, guid: c26dd84d886494f4e9171ff1163e4c75, type: 2}
+  - {fileID: 11400000, guid: 119e7faf295ab7d45913d7283550783f, type: 2}
+  - {fileID: 11400000, guid: 02b32f2b608e88c4c8aa32a6ed318738, type: 2}
+  - {fileID: 11400000, guid: 8027d75cc41b8d7408a60aa63b705b40, type: 2}
+  - {fileID: 11400000, guid: b532db16176e8544cb19085229939e93, type: 2}
 --- !u!4 &1005689230
 Transform:
   m_ObjectHideFlags: 0

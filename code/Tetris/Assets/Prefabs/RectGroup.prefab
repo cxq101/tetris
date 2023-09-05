@@ -54,6 +54,12 @@ MonoBehaviour:
   - {fileID: 2551091291664678717}
   - {fileID: 1294570854558029110}
   - {fileID: 8895072531228182402}
+  m_TransformIndex: 0
+  m_Transforms:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
 --- !u!1001 &172681687251645720
 PrefabInstance:
   m_ObjectHideFlags: 0

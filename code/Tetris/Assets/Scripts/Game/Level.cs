@@ -16,6 +16,9 @@ namespace Mini.Game
 
         private Brick[,] m_BrickList;
 
+        public int Width => m_Width;
+        public int Height => m_Height;
+
         [ContextMenu(nameof(Generate))]
         public void Generate()
         {
@@ -37,13 +40,13 @@ namespace Mini.Game
             }
         }
 
-        public bool IsValid(Vector2Int[] posArr)
+        public bool IsValid(Vector2Int[] posArr, bool isMove = true)
         { 
-            return posArr.All(e => IsExistPos(e) && !IsExistAtPos(e));
+            return posArr.All(e => IsInRange(e, isMove) && !IsExistAtPos(e));
         }
-        private bool IsExistPos(Vector2Int pos)
+        private bool IsInRange(Vector2Int pos, bool isMove = true)
         {
-            return IsInRange(pos.x, 0, m_Width - 1) && IsInRange(pos.y, 0, m_Height - 1);
+            return IsInRange(pos.x, 0, m_Width - 1) && IsInRange(pos.y, 0, m_Height + (isMove ? 5 : -1));
         }
 
         private bool IsInRange(int value, int min, int max)
@@ -53,7 +56,11 @@ namespace Mini.Game
         
         private bool IsExistAtPos(Vector2Int pos)
         {
-            return m_BrickList[pos.x, pos.y] != null;
+            if (IsInRange(pos, false))
+            {
+                return IsExistAtPos(pos.x, pos.y);
+            }
+            return false;
         }    
         private bool IsExistAtPos(int posX, int posY)
         {
@@ -99,6 +106,21 @@ namespace Mini.Game
             m_BrickList[pos.x, pos.y] = brickComponent;
         }
 
+        public void Bling(int[] lines)
+        {
+            int width = m_BrickList.GetLength(0);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int h = lines[i];
+                for (int w = 0; w < width; w++)
+                {
+                    if (IsExistAtPos(w, h))
+                    {
+                        m_BrickList[w, h].Bling();
+                    }
+                }
+            }
+        }
         public void RomoveLinesAndDrop(int[] lines)
         {
             int width = m_BrickList.GetLength(0);
@@ -116,7 +138,7 @@ namespace Mini.Game
                 }
             }
 
-            for (int h = 0; h < height; h++)
+            for (int h = lines[0] + 1; h < height; h++)
             {
                 bool isExist = false;
                 int dropDownSpace = 0;
@@ -140,29 +162,16 @@ namespace Mini.Game
                     {
                         m_BrickList[i, h].Pos = new Vector2Int(m_BrickList[i, h].Pos.x, m_BrickList[i, h].Pos.y - dropDownSpace);
                         m_BrickList[i, h - dropDownSpace] = m_BrickList[i, h];
+                        m_BrickList[i, h] = null;
                     }
                 }
             }
         }
-
-        [ContextMenu(nameof(Clear))]
-        private void Clear()
+        [ContextMenu(nameof(Test))]
+        void Test()
         {
-            if (m_BrickList != null)
-            {
-                for (int i = 0; i < m_BrickList.GetLength(0); i++)
-                {
-                    for (int j = 0; j < m_BrickList.GetLength(1); j++)
-                    {
-                        var brick = m_BrickList[i, j];
-                        if (brick)
-                        {
-                            DestroyImmediate(brick.gameObject);
-                            m_BrickList[i, j] = null;
-                        }
-                    }
-                }
-            }
+            CreateBrick(new Vector2Int(0, 0));
+            Bling(new int[]{0});
         }
     }
 }

@@ -17,11 +17,19 @@ namespace Mini.Game
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                GameManager.Instance.OnInputMove(-1);
+                GameManager.Instance.OnInputMove(Vector2Int.left);
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
-                GameManager.Instance.OnInputMove(1);
+                GameManager.Instance.OnInputMove(Vector2Int.right);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                GameManager.Instance.OnInputMove(Vector2Int.down);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GameManager.Instance.OnInputTransform();
             }
         }
     }

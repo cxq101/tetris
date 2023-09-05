@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c5fb259a0899774ebd10194631deee3, type: 3}
-  m_Name: SpawnBrickItem
+  m_Name: RectSO
   m_EditorClassIdentifier: 
   Weight: 1
   BrickPref: {fileID: 3628416655733023393, guid: ea1f6553312a26447a611d9dd54b41b8, type: 3}

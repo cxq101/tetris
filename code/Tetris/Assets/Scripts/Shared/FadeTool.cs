@@ -21,7 +21,7 @@ namespace Mini.Shared
         private SpriteRenderer m_Renderer;
         private Coroutine m_FadeCoroutine;
 
-        void Start()
+        void Awake()
         {
             m_Renderer = GetComponent<SpriteRenderer>();
             Color color = m_Renderer.color;
@@ -31,27 +31,31 @@ namespace Mini.Shared
         private void Update()
         {
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                FadeIn();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                FadeOut();
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Bling();
-            }
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Stop();
-            }
+            //if (Input.GetKeyDown(KeyCode.A))
+            //{
+            //    FadeIn();
+            //}
+            //if (Input.GetKeyDown(KeyCode.S))
+            //{
+            //    FadeOut();
+            //}
+            //if (Input.GetKeyDown(KeyCode.D))
+            //{
+            //    Bling();
+            //}
+            //if (Input.GetKeyDown(KeyCode.F))
+            //{
+            //    Stop();
+            //}
 #endif
         }
         private IEnumerator Fade(Color fromColor, Color toColor, float time, bool pingpong = false)
         {
             float countTime = 0;
+            if (m_Renderer == null)
+            {
+                Debug.Log("==========m_Renderer");
+            }
             while (countTime < time)
             {
                 m_Renderer.color = Color.Lerp(fromColor, toColor, countTime / time);

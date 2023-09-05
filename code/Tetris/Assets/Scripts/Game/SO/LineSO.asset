@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c5fb259a0899774ebd10194631deee3, type: 3}
-  m_Name: SpawnBrickItem 1
+  m_Name: LineSO
   m_EditorClassIdentifier: 
   Weight: 1
-  BrickPref: {fileID: 4716483696182860999, guid: ee714b0cfaca77941ad7bb4f96f1e50d, type: 3}
+  BrickPref: {fileID: 2292465771671519233, guid: d738c4a1077b63e44b9c7540a4869fb6, type: 3}

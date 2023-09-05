@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8931826722203767573}
   - component: {fileID: 3647514129795749557}
   - component: {fileID: 5471427286389768257}
+  - component: {fileID: 6621757764235708691}
   m_Layer: 0
   m_Name: Brick_Green
   m_TagString: Untagged
@@ -97,3 +98,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1134cd56323b942a9736974485177e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Pos: {x: 0, y: 0}
+--- !u!114 &6621757764235708691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7969787197077151043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197c2da477a6a504eb9a71418cae7501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FadeTime: 0.1
+  m_FromAlpha: 0
+  m_ToAlpha: 1
+  m_RepeatTimes: 2
