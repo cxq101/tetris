@@ -14,8 +14,7 @@ namespace Mini.Game
         private Level m_Level;
         private int m_Score;
         private BrickGroup m_CurrentBrickGroup;
-        [SerializeField]
-        private SpawnBricks m_SpawnBricks1;
+        private Spawner m_Spawner;
 
         private float m_LoopTime = 1.0f;
 
@@ -28,6 +27,7 @@ namespace Mini.Game
                 return;
             }
             s_Instance = this;
+            m_Spawner = GetComponent<Spawner>();
         }
 
         private void Start()
@@ -129,38 +129,13 @@ namespace Mini.Game
             return false;
         }
 
-
         private void Spawn()
         {
-            GameObject randomPrefab = RandomBrickGroup();
-            GameObject gameObject = Instantiate(randomPrefab);
+            GameObject gameObject = m_Spawner.Generate();
             BrickGroup brickGroup = gameObject.GetComponent<BrickGroup>();
-            Vector2Int[] posArr = brickGroup.PosArray(SpawnPos);
             m_CurrentBrickGroup = brickGroup;
             m_CurrentBrickGroup.SetPos(SpawnPos);
         }
-
-        private GameObject RandomBrickGroup()
-        {
-            SpawnBrickItem[] items = m_SpawnBricks1.Bricks;
-            int totalWeight = items.Sum(e => e.Weight);
-            int randomWeight = Random.Range(1, totalWeight + 1);
-            var random = new System.Random();
-            
-            SpawnBrickItem? target = null;
-            int countWeight = 0;
-            foreach (var element in items)
-            {
-                countWeight += element.Weight;
-                if (randomWeight <= countWeight)
-                {
-                    target = element;
-                    break;
-                }
-            }
-            return target?.Prefab;
-        }
-
     }
 }
 

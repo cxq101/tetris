@@ -371,6 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1005689230}
   - component: {fileID: 1005689229}
+  - component: {fileID: 1005689231}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -391,15 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Level: {fileID: 863440312}
-  m_SpawnBricks1: {fileID: 11400000, guid: 614a54afe51d88a4286073232ac26aeb, type: 2}
-  m_SpawnBricks:
-  - {fileID: 11400000, guid: 4c5d7940ad9e53a4b866eaedce5366ce, type: 2}
-  - {fileID: 11400000, guid: aee481c2a24a6ff4987e1f510a883e0e, type: 2}
-  - {fileID: 11400000, guid: c26dd84d886494f4e9171ff1163e4c75, type: 2}
-  - {fileID: 11400000, guid: 119e7faf295ab7d45913d7283550783f, type: 2}
-  - {fileID: 11400000, guid: 02b32f2b608e88c4c8aa32a6ed318738, type: 2}
-  - {fileID: 11400000, guid: 8027d75cc41b8d7408a60aa63b705b40, type: 2}
-  - {fileID: 11400000, guid: b532db16176e8544cb19085229939e93, type: 2}
 --- !u!4 &1005689230
 Transform:
   m_ObjectHideFlags: 0
@@ -415,6 +407,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1005689231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1005689228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3446205c7d1eb324c8f4a72c62210ce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_GeneratePool: {fileID: 11400000, guid: 614a54afe51d88a4286073232ac26aeb, type: 2}
 --- !u!1 &1601093070
 GameObject:
   m_ObjectHideFlags: 0
