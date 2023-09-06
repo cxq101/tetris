@@ -7,6 +7,8 @@ namespace Mini.Game
 {
     public class Level : MonoBehaviour
     {
+        public static Level Instance => s_Instance;
+        private static Level s_Instance;
         [SerializeField, Range(1, 50)]
         private int m_Width = 5;
         [SerializeField, Range(1, 50)]
@@ -18,6 +20,16 @@ namespace Mini.Game
 
         public int Width => m_Width;
         public int Height => m_Height;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            s_Instance = this;
+        }
 
         [ContextMenu(nameof(Generate))]
         public void Generate()

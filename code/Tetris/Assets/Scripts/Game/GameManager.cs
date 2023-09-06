@@ -1,7 +1,6 @@
-using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Mini.Core;
 
 namespace Mini.Game
 {
@@ -9,16 +8,16 @@ namespace Mini.Game
     {
         public static GameManager Instance => s_Instance;
         private static GameManager s_Instance;
-
         [SerializeField]
-        private Level m_Level;
+        private AbstractGameEvent m_LoseEvent;
+
         private int m_Score;
         private BrickGroup m_CurrentBrickGroup;
         private Spawner m_Spawner;
 
         private float m_LoopTime = 1.0f;
 
-        public Vector2Int SpawnPos => new Vector2Int(m_Level.Width / 2, m_Level.Height);
+        public Vector2Int SpawnPos => new Vector2Int(Level.Instance.Width / 2, Level.Instance.Height);
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -30,18 +29,18 @@ namespace Mini.Game
             m_Spawner = GetComponent<Spawner>();
         }
 
-        private void Start()
+        public void StartGame()
         {
-            m_Level.Generate();
+            Level.Instance.Generate();
             StartGameLoop();
         }
 
         [ContextMenu(nameof(CheckScoreNow))]
         private void CheckScoreNow()
         {
-            if (m_Level.CheckFull(out int[] fullLines))
+            if (Level.Instance.CheckFull(out int[] fullLines))
             {
-                m_Level.Bling(fullLines);
+                Level.Instance.Bling(fullLines);
                 StartCoroutine(BlingAndRemove(fullLines));
             }
         }
@@ -49,9 +48,10 @@ namespace Mini.Game
         private IEnumerator BlingAndRemove(int[] fullLines)
         {
             yield return new WaitForSeconds(0.6f);
-            m_Level.RomoveLinesAndDrop(fullLines);
+            Level.Instance.RomoveLinesAndDrop(fullLines);
             // Add Score
             m_Score += fullLines.Length;
+            UIManager.Instance.GetView<Hud>().SetScore(m_Score);
             Debug.Log($"Score add: {fullLines.Length}  total: {m_Score}");
         }
 
@@ -78,6 +78,7 @@ namespace Mini.Game
                     if (!TryStopMoveAddToLevel())
                     {
                         Debug.Log("====Game Over====");
+                        m_LoseEvent.Raise();
                     }
                 }
             }
@@ -87,9 +88,9 @@ namespace Mini.Game
         private bool TryStopMoveAddToLevel()
         {
             Vector2Int[] posArr = m_CurrentBrickGroup.PosArray();
-            if (m_Level.IsValid(posArr, false))
+            if (Level.Instance.IsValid(posArr, false))
             {
-                m_Level.AddBrickGroup(posArr);
+                Level.Instance.AddBrickGroup(posArr);
                 Destroy(m_CurrentBrickGroup.gameObject);
                 m_CurrentBrickGroup = null;
                 return true;
@@ -110,7 +111,7 @@ namespace Mini.Game
         private bool TryTransForm()
         {
             if (m_CurrentBrickGroup == null) return false;
-            if (m_Level.IsValid(m_CurrentBrickGroup.NextTransformPosArray()))
+            if (Level.Instance.IsValid(m_CurrentBrickGroup.NextTransformPosArray()))
             {
                 m_CurrentBrickGroup.TransformNext();
                 return true;
@@ -121,7 +122,7 @@ namespace Mini.Game
         private bool TryMoveBy(Vector2Int pos)
         {
             if (m_CurrentBrickGroup == null) return false;
-            if (m_Level.IsValid(m_CurrentBrickGroup.PosArray(pos)))
+            if (Level.Instance.IsValid(m_CurrentBrickGroup.PosArray(pos)))
             {
                 m_CurrentBrickGroup.MoveBy(pos);
                 return true;
@@ -132,6 +133,7 @@ namespace Mini.Game
         private void Spawn()
         {
             GameObject gameObject = m_Spawner.Generate();
+            gameObject.transform.parent = transform;
             BrickGroup brickGroup = gameObject.GetComponent<BrickGroup>();
             m_CurrentBrickGroup = brickGroup;
             m_CurrentBrickGroup.SetPos(SpawnPos);

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Mini.Core;
 using Mini.Game;
 
@@ -11,8 +8,6 @@ namespace Mini.Shared
     {
         [SerializeField]
         private GameObject[] m_PreloadedAssets;
-        [SerializeField]
-        private LevelDataDef m_LevelDataDef;
 
         [Header("State")]
         private State m_MainViewState;
@@ -29,12 +24,10 @@ namespace Mini.Shared
         private AbstractGameEvent m_QuitEvent;
 
         private StateMachine m_StateMachine;
-        private SceneController m_SceneController;
 
         public void Initialize()
         {
             m_StateMachine = new StateMachine();
-            m_SceneController = new SceneController(SceneManager.GetActiveScene());
 
             InstantiatePreloadAssets();
             CreateMenuNavigationSequence();
@@ -82,20 +75,17 @@ namespace Mini.Shared
         void OnMainMenuDisplayed()
         {
             UIManager.Instance.Show<MainView>();
-            //AudioManager.Instance.PlayMusic(SoundID.MenuMusic);
-            PlayController.Instance.EnableJump = false;
-            CameraManager.Instance.SetFollow(PlayController.Instance.transform);
         }
         void OnLevelLoad()
         {
             UIManager.Instance.GoBack();
-            LevelLoader.Instance.Load(m_LevelDataDef);
+            LevelLoader.Instance.Load();
+            GameManager.Instance.StartGame();
         }
         void OnGamePlay()
         {
             UIManager.Instance.Show<Hud>();
-            PlayController.Instance.EnableJump = true;
-        }        
+        }
         void OnGamePause()
         {
             UIManager.Instance.Show<PauseView>();
@@ -108,8 +98,6 @@ namespace Mini.Shared
         void OnReLoadLevel()
         {
             LevelLoader.Instance.Unload();
-            PlayController.Instance.OnLevelReset();
-            GameManager.OnLevelReset();
         }
     }
 }
