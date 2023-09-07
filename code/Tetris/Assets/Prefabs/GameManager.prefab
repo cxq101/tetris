@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LoseEvent: {fileID: 11400000, guid: 57620643bf1c1c94bbcf7743aad54e23, type: 2}
+  m_LoopTime: 0.8
+  m_HoldTime: 0.5
 --- !u!114 &1774227148356309861
 MonoBehaviour:
   m_ObjectHideFlags: 0

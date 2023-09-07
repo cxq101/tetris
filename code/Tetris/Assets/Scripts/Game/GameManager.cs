@@ -15,7 +15,14 @@ namespace Mini.Game
         private BrickGroup m_CurrentBrickGroup;
         private Spawner m_Spawner;
 
+        [SerializeField]
         private float m_LoopTime = 1.0f;
+        [SerializeField]
+        private float m_HoldTime = 1.0f;
+        private float m_CurrLoopTime;
+        private float m_CurrHoldTime;
+        private bool m_IsRunning;
+        private bool m_IsFading;
 
         public Vector2Int SpawnPos => new Vector2Int(Level.Instance.Width / 2, Level.Instance.Height);
         private void Awake()
@@ -32,13 +39,30 @@ namespace Mini.Game
         public void StartGame()
         {
             Level.Instance.Generate();
-            StartGameLoop();
+            m_IsRunning = true;
+        }
+
+        private void Update()
+        {
+            if (!m_IsRunning) return;
+            if (m_CurrHoldTime > 0)
+            {
+                m_CurrHoldTime -= Time.deltaTime;
+                return;
+            }
+            if (m_CurrLoopTime > 0)
+            {
+                m_CurrLoopTime -= Time.deltaTime;
+                return;
+            }
+            Step();
+            m_CurrLoopTime = m_LoopTime;
         }
 
         [ContextMenu(nameof(CheckScoreNow))]
         private void CheckScoreNow()
         {
-            if (Level.Instance.CheckFull(out int[] fullLines))
+            if (!m_IsFading && Level.Instance.CheckFull(out int[] fullLines))
             {
                 Level.Instance.Bling(fullLines);
                 StartCoroutine(BlingAndRemove(fullLines));
@@ -47,22 +71,14 @@ namespace Mini.Game
 
         private IEnumerator BlingAndRemove(int[] fullLines)
         {
+            m_IsFading = true;
             yield return new WaitForSeconds(0.6f);
             Level.Instance.RomoveLinesAndDrop(fullLines);
             // Add Score
             m_Score += fullLines.Length;
             UIManager.Instance.GetView<Hud>().SetScore(m_Score);
+            m_IsFading = false;
             Debug.Log($"Score add: {fullLines.Length}  total: {m_Score}");
-        }
-
-        private void StartGameLoop()
-        {
-            InvokeRepeating(nameof(Step), 0.0f, m_LoopTime);
-        }
-
-        private void StopGameLoop()
-        {
-            CancelInvoke(nameof(Step));
         }
 
         private void Step()
@@ -100,12 +116,18 @@ namespace Mini.Game
 
         public void OnInputMove(Vector2Int pos)
         {
-            TryMoveBy(pos);
+            if (TryMoveBy(pos))
+            {
+                m_CurrHoldTime = m_HoldTime;
+            }
         }
 
         public void OnInputTransform()
         {
-            TryTransForm();
+            if (TryTransForm())
+            {
+                m_CurrHoldTime = m_HoldTime;
+            }
         }
 
         private bool TryTransForm()
