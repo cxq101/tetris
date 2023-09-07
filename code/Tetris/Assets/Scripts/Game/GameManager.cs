@@ -109,6 +109,7 @@ namespace Mini.Game
                 Level.Instance.AddBrickGroup(posArr);
                 Destroy(m_CurrentBrickGroup.gameObject);
                 m_CurrentBrickGroup = null;
+                Ghost.Instance.gameObject.SetActive(false);
                 return true;
             }
             return false;
@@ -136,6 +137,8 @@ namespace Mini.Game
             if (Level.Instance.IsValid(m_CurrentBrickGroup.NextTransformPosArray()))
             {
                 m_CurrentBrickGroup.TransformNext();
+                Ghost.Instance.Transform(m_CurrentBrickGroup.BrickPosArray());
+                AdaptGhostPos();
                 return true;
             }
             return false;
@@ -147,6 +150,7 @@ namespace Mini.Game
             if (Level.Instance.IsValid(m_CurrentBrickGroup.PosArray(pos)))
             {
                 m_CurrentBrickGroup.MoveBy(pos);
+                AdaptGhostPos();
                 return true;
             }
             return false;
@@ -159,6 +163,22 @@ namespace Mini.Game
             BrickGroup brickGroup = gameObject.GetComponent<BrickGroup>();
             m_CurrentBrickGroup = brickGroup;
             m_CurrentBrickGroup.SetPos(SpawnPos);
+            
+            Ghost.Instance.gameObject.SetActive(true);
+            Ghost.Instance.Transform(m_CurrentBrickGroup.BrickPosArray());
+            AdaptGhostPos();
+        }
+
+        private void AdaptGhostPos()
+        {
+            Vector2Int pos = new Vector2Int();
+            while (Level.Instance.IsValid(m_CurrentBrickGroup.PosArray(pos)))
+            {
+                pos.y -= 1;
+            }
+            pos.y++;
+            pos.y = pos.y > 0 ? 0 : pos.y;
+            Ghost.Instance.SetPos(pos + m_CurrentBrickGroup.Pos);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Mini.Game
         [SerializeField]
         private Vector2Int[] m_Transforms;
         public int TransformSize => m_Transforms.Length / m_Bricks.Length;
+        public Vector2Int Pos => m_Pos;
         public int NextTransformIndex
         {
             get
@@ -90,6 +91,16 @@ namespace Mini.Game
             {
                 Brick brick = m_Bricks[i];
                 vector2Ints[i] = pos + brick.Pos;
+            }
+            return vector2Ints;
+        }
+        public Vector2Int[] BrickPosArray()
+        {
+            Vector2Int[] vector2Ints = new Vector2Int[m_Bricks.Length];
+            for (int i = 0; i < m_Bricks.Length; i++)
+            {
+                Brick brick = m_Bricks[i];
+                vector2Ints[i] = brick.Pos;
             }
             return vector2Ints;
         }
